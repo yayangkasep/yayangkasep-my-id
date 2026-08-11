@@ -41,17 +41,16 @@
   display: flex;
   gap: 1.5rem;
   align-items: center;
+  flex-wrap: wrap;
 }
 
-/* Buttons moved to index.css for global design system */
-
-/* Abstract decorations */
 .hero-abstract {
   position: absolute;
   border-radius: 50%;
   filter: blur(80px);
   z-index: -1;
   opacity: 0.5;
+  pointer-events: none;
 }
 
 .shape-1 {
@@ -62,19 +61,20 @@
   right: -100px;
 }
 
-.shape-2 {
-  width: 300px;
-  height: 300px;
-  background: #ab47bc;
-  bottom: -50px;
-  right: 20%;
-}
-
 @media (max-width: 768px) {
   .hero-title {
     font-size: 3rem;
   }
+
+  .hero-subtitle {
+    font-size: 1rem;
+  }
+
   .hero-description {
     font-size: 1.1rem;
+  }
+
+  .hero-cta {
+    gap: 1rem;
   }
 }

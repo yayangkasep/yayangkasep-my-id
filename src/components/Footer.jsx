@@ -1,18 +1,28 @@
-import React from 'react';
-import { FiMail } from 'react-icons/fi';
-import { FaGithub, FaTwitter, FaLinkedin } from 'react-icons/fa';
+import { SITE, SOCIAL } from '../data/content';
 import './Footer.css';
 
 const Footer = () => {
+  const year = new Date().getFullYear();
+
   return (
-    <footer className="footer">
+    <footer className="footer" role="contentinfo">
       <div className="container footer-container">
         <div className="footer-bottom">
-          <p>&copy; {new Date().getFullYear()} Yayang. All rights reserved.</p>
-          <div className="footer-links">
-            <a href="#">Privacy Policy</a>
-            <a href="#">Terms of Service</a>
-          </div>
+          <p>
+            &copy; {year} {SITE.name}. All rights reserved.
+          </p>
+          <nav className="footer-links" aria-label="Footer">
+            {SOCIAL.map((item) => (
+              <a
+                key={item.name}
+                href={item.href}
+                target="_blank"
+                rel="noopener noreferrer"
+              >
+                {item.name}
+              </a>
+            ))}
+          </nav>
         </div>
       </div>
     </footer>

@@ -1,33 +1,84 @@
 :root {
-  /* OLED Dark Theme Only */
+  /* Colors — OLED Dark */
   --text-primary: #FFFFFF;
-  --text-secondary: #A1A1AA; /* slightly lighter than #3F3F46 for readability */
+  --text-secondary: #A1A1AA;
   --bg-primary: #09090B;
   --bg-secondary: #18181B;
   --accent: #2563EB;
-  
+  --accent-hover: #1D4ED8;
   --border: #3F3F46;
   --glass-bg: rgba(24, 24, 27, 0.7);
   --glass-border: rgba(63, 63, 70, 0.5);
   --glass-shadow: 0 10px 15px rgba(0, 0, 0, 0.2);
-  
+  --focus-ring: 0 0 0 2px var(--bg-primary), 0 0 0 4px var(--accent);
+
   /* Typography */
-  --font-heading: 'Archivo', -apple-system, sans-serif;
-  --font-body: 'Space Grotesk', -apple-system, sans-serif;
+  --font-heading: 'Archivo', -apple-system, BlinkMacSystemFont, sans-serif;
+  --font-body: 'Space Grotesk', -apple-system, BlinkMacSystemFont, sans-serif;
+
+  /* Spacing scale */
+  --space-1: 4px;
+  --space-2: 8px;
+  --space-3: 12px;
+  --space-4: 16px;
+  --space-5: 24px;
+  --space-6: 32px;
+  --space-7: 48px;
+  --space-8: 64px;
+  --space-9: 100px;
+
+  /* Radius scale */
+  --radius-sm: 8px;
+  --radius-md: 12px;
+  --radius-lg: 20px;
+  --radius-xl: 24px;
+  --radius-2xl: 32px;
+  --radius-full: 9999px;
 
   /* Shadows */
   --shadow-sm: 0 1px 2px rgba(0, 0, 0, 0.05);
   --shadow-md: 0 4px 6px rgba(0, 0, 0, 0.2);
   --shadow-lg: 0 10px 15px rgba(0, 0, 0, 0.3);
   --shadow-xl: 0 20px 25px rgba(0, 0, 0, 0.4);
+
+  /* Z-index scale */
+  --z-base: 1;
+  --z-dropdown: 50;
+  --z-sticky: 100;
+  --z-overlay: 200;
+  --z-modal: 300;
+
+  /* Motion */
+  --duration-fast: 150ms;
+  --duration-normal: 200ms;
+  --duration-slow: 300ms;
+  --ease-out: cubic-bezier(0.16, 1, 0.3, 1);
 }
 
-/* Remove media query for prefers-color-scheme because it's dark only */
-
-* {
+*,
+*::before,
+*::after {
   box-sizing: border-box;
   margin: 0;
   padding: 0;
+}
+
+html {
+  scroll-behavior: smooth;
+}
+
+@media (prefers-reduced-motion: reduce) {
+  html {
+    scroll-behavior: auto;
+  }
+
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.01ms !important;
+  }
 }
 
 body {
@@ -49,6 +100,34 @@ a {
   text-decoration: none;
 }
 
+img {
+  max-width: 100%;
+  display: block;
+}
+
+:focus-visible {
+  outline: none;
+  box-shadow: var(--focus-ring);
+}
+
+.skip-link {
+  position: absolute;
+  top: -100%;
+  left: var(--space-4);
+  z-index: var(--z-modal);
+  background: var(--accent);
+  color: white;
+  padding: var(--space-3) var(--space-5);
+  border-radius: var(--radius-sm);
+  font-weight: 600;
+  transition: top var(--duration-fast) ease;
+}
+
+.skip-link:focus {
+  top: var(--space-4);
+  box-shadow: var(--focus-ring);
+}
+
 .glass {
   background: var(--glass-bg);
   backdrop-filter: blur(12px);
@@ -64,7 +143,7 @@ a {
 }
 
 .section {
-  padding: 100px 0;
+  padding: var(--space-9) 0;
 }
 
 .section-title {
@@ -75,32 +154,32 @@ a {
   text-align: center;
 }
 
-/* Utilities */
 .text-gradient {
   background: linear-gradient(90deg, #FFFFFF, #2563EB);
   -webkit-background-clip: text;
   -webkit-text-fill-color: transparent;
   background-clip: text;
-  text-shadow: 0 0 10px rgba(37, 99, 235, 0.3); /* Minimal glow */
 }
 
-/* Buttons */
 .btn-primary {
   background: var(--accent);
   color: white;
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
-  transition: all 200ms ease;
+  transition: background var(--duration-normal) ease, transform var(--duration-normal) ease, box-shadow var(--duration-normal) ease;
   cursor: pointer;
   border: none;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .btn-primary:hover {
-  opacity: 0.9;
+  background: var(--accent-hover);
   transform: translateY(-1px);
   box-shadow: 0 0 15px rgba(37, 99, 235, 0.4);
 }
@@ -110,13 +189,16 @@ a {
   color: var(--text-primary);
   border: 2px solid var(--border);
   padding: 12px 24px;
-  border-radius: 8px;
+  border-radius: var(--radius-sm);
   font-weight: 600;
-  transition: all 200ms ease;
+  transition: border-color var(--duration-normal) ease, background var(--duration-normal) ease;
   cursor: pointer;
   display: inline-flex;
   align-items: center;
   justify-content: center;
+  gap: 8px;
+  font-family: inherit;
+  font-size: 1rem;
 }
 
 .btn-secondary:hover {
@@ -124,6 +206,25 @@ a {
   background: rgba(255, 255, 255, 0.05);
 }
 
-.cursor-pointer {
-  cursor: pointer;
+.sr-only {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  padding: 0;
+  margin: -1px;
+  overflow: hidden;
+  clip: rect(0, 0, 0, 0);
+  white-space: nowrap;
+  border: 0;
+}
+
+@media (max-width: 768px) {
+  .section {
+    padding: 64px 0;
+  }
+
+  .section-title {
+    font-size: 2rem;
+    margin-bottom: 2rem;
+  }
 }

@@ -18,7 +18,8 @@
 }
 
 .footer-links a {
-  transition: color 200ms ease;
+  transition: color var(--duration-normal) ease;
+  border-radius: var(--radius-sm);
 }
 
 .footer-links a:hover {
