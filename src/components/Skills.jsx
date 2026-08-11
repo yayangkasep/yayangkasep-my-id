@@ -1,4 +1,5 @@
-import { motion, useReducedMotion } from 'framer-motion';
+import { useRef, useEffect } from 'react';
+import { motion, useInView, useAnimation, useReducedMotion } from 'framer-motion';
 import './Skills.css';
 
 const skillGroups = [
@@ -31,38 +32,66 @@ const skillGroups = [
   },
 ];
 
-const SkillBar = ({ name, level, delay, reduceMotion }) => (
-  <div className="skill-item">
-    <div className="skill-label">
-      <span>{name}</span>
-      <span className="skill-pct">{level}%</span>
+const SkillBar = ({ name, level, index, reduceMotion }) => {
+  const controls = useAnimation();
+  const ref = useRef(null);
+  const inView = useInView(ref, { once: true, margin: '-60px' });
+
+  useEffect(() => {
+    if (inView) {
+      controls.start({
+        width: `${level}%`,
+        transition: reduceMotion
+          ? { duration: 0 }
+          : {
+              duration: 0.9,
+              delay: index * 0.08,
+              ease: [0.16, 1, 0.3, 1],
+            },
+      });
+    }
+  }, [inView, controls, level, index, reduceMotion]);
+
+  return (
+    <div className="skill-item" ref={ref}>
+      <div className="skill-label">
+        <span>{name}</span>
+        <span className="skill-pct">{level}%</span>
+      </div>
+      <div
+        className="skill-track"
+        role="progressbar"
+        aria-valuenow={level}
+        aria-valuemin={0}
+        aria-valuemax={100}
+        aria-label={`${name}: ${level}%`}
+      >
+        <motion.div
+          className="skill-fill"
+          initial={{ width: 0 }}
+          animate={controls}
+        />
+      </div>
     </div>
-    <div className="skill-track" role="progressbar" aria-valuenow={level} aria-valuemin={0} aria-valuemax={100} aria-label={`${name}: ${level}%`}>
-      <motion.div
-        className="skill-fill"
-        initial={{ width: 0 }}
-        whileInView={{ width: `${level}%` }}
-        viewport={{ once: true, margin: '-80px' }}
-        transition={
-          reduceMotion
-            ? { duration: 0 }
-            : { duration: 0.8, delay, ease: [0.16, 1, 0.3, 1] }
-        }
-      />
-    </div>
-  </div>
-);
+  );
+};
 
 const Skills = () => {
   const reduceMotion = useReducedMotion();
+  const sectionRef = useRef(null);
+  const sectionInView = useInView(sectionRef, { once: true, margin: '-80px' });
 
   return (
     <section id="skills" className="section" aria-labelledby="skills-title">
       <div className="container">
         <motion.div
+          ref={sectionRef}
           initial={reduceMotion ? false : { opacity: 0, y: 30 }}
-          whileInView={{ opacity: 1, y: 0 }}
-          viewport={{ once: true, margin: '-100px' }}
+          animate={
+            sectionInView || reduceMotion
+              ? { opacity: 1, y: 0 }
+              : { opacity: 0, y: 30 }
+          }
           transition={{ duration: reduceMotion ? 0 : 0.8 }}
         >
           <h2 id="skills-title" className="section-title">
@@ -77,7 +106,7 @@ const Skills = () => {
                     key={skill.name}
                     name={skill.name}
                     level={skill.level}
-                    delay={i * 0.08}
+                    index={i}
                     reduceMotion={reduceMotion}
                   />
                 ))}
